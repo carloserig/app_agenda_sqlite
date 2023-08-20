@@ -17,8 +17,8 @@ class MyApp extends StatelessWidget {
       //home: const Contato(),
       debugShowCheckedModeBanner: false,
       routes: {
-        '/':(_) => const Contato(), 
-        '/consulta':(_) => const ConsultaContato(),
+        '/':(_) => const ConsultaContato(), 
+        '/novo':(_) => const Contato(),
         '/editar':(_) => const EditarContato()
       }
     );
