@@ -17,7 +17,6 @@ class Contato extends StatefulWidget {
 }
 
 class _ContatoState extends State<Contato> {
-
   final contatoStore = ContatoStore();
 
   ImagePicker picker = ImagePicker();
@@ -28,6 +27,7 @@ class _ContatoState extends State<Contato> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Novo Contato'),
+        centerTitle: true,
       ),
       body: Container(
         child: Padding(
@@ -44,55 +44,49 @@ class _ContatoState extends State<Contato> {
                       ErrorBox(
                         message: contatoStore.notification,
                       ),
-                      Column(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            contatoStore.foto.isEmpty ? Container(
-                                width: 140.0,
-                                height: 140.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: AssetImage("assets/images/person.png"),
-                                      fit: BoxFit.cover
+                          contatoStore.foto.isEmpty
+                              ? Container(
+                                  width: 140.0,
+                                  height: 140.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/images/person.png"),
+                                        fit: BoxFit.cover),
+                                  ),
+                                )
+                              : Container(
+                                  width: 140.0,
+                                  height: 140.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image:
+                                            FileImage(File(contatoStore.foto)),
+                                        fit: BoxFit.cover),
                                   ),
                                 ),
-                              ) 
-                              :
-                              Container(
-                                width: 140.0,
-                                height: 140.0,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                      image: FileImage(File(contatoStore.foto)),
-                                      fit: BoxFit.cover
-                                  ),
-                                ),
-                              ),  
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              onPressed: _fotoCamera,
-                              icon: const Icon(Icons.camera_alt),
-                            ),  
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           IconButton(
-                              onPressed: _fotoGaleria,
-                              icon: Icon(Icons.attach_file), 
+                            onPressed: _fotoCamera,
+                            icon: const Icon(Icons.camera_alt),
                           ),
-                          ],
-                        )
-                          
+                          IconButton(
+                            onPressed: _fotoGaleria,
+                            icon: Icon(Icons.attach_file),
+                          ),
                         ],
                       ),
                       TituloSubtitulo(
-                          titulo: 'Nome',
-                          subtitulo: 'Digite o nome completo'),
+                          titulo: 'Nome', subtitulo: 'Digite o nome completo'),
                       TextField(
                           enabled: !contatoStore.loading,
                           cursorColor: Colors.blue,
@@ -106,8 +100,7 @@ class _ContatoState extends State<Contato> {
                             contatoStore.setNome(value);
                           }),
                       TituloSubtitulo(
-                          titulo: 'Celular',
-                          subtitulo: 'Informe o nº Celular'),
+                          titulo: 'Celular', subtitulo: 'Informe o nº Celular'),
                       TextField(
                           enabled: !contatoStore.loading,
                           cursorColor: Colors.blue,
@@ -163,15 +156,18 @@ class _ContatoState extends State<Contato> {
                                     ),
                                   ),
                             onPressed: () async {
-                              if(contatoStore.nomeValid && contatoStore.celularValid 
-                                 && contatoStore.emailValid && contatoStore.fotoValid) {
-                                  await contatoStore.salvarContato();
-                                  Navigator.of(context).pop();
+                              if (contatoStore.nomeValid &&
+                                  contatoStore.celularValid &&
+                                  contatoStore.emailValid &&
+                                  contatoStore.fotoValid) {
+                                await contatoStore.salvarContato();
+                                Navigator.of(context).pop();
                               } else {
-                                contatoStore.notification = 'Dados do formulário inconsistentes!';
-                                await Future.delayed(const Duration(seconds: 2));
+                                contatoStore.notification =
+                                    'Dados do formulário inconsistentes!';
+                                await Future.delayed(
+                                    const Duration(seconds: 2));
                               }
-                              
                             }),
                       ),
                     ],
@@ -187,18 +183,17 @@ class _ContatoState extends State<Contato> {
 
   _fotoGaleria() async {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    if(image == null) return;
-        imagemSelecionada = File(image.path);
-        contatoStore.foto = imagemSelecionada!.path;
-        print('imagem --> ${imagemSelecionada!.path}');
+    if (image == null) return;
+    imagemSelecionada = File(image.path);
+    contatoStore.foto = imagemSelecionada!.path;
+    print('imagem --> ${imagemSelecionada!.path}');
   }
 
   _fotoCamera() async {
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
-     if(image == null) return;
-        imagemSelecionada = File(image.path);
-        contatoStore.foto = imagemSelecionada!.path;
-        print('imagem --> ${imagemSelecionada!.path}');
+    if (image == null) return;
+    imagemSelecionada = File(image.path);
+    contatoStore.foto = imagemSelecionada!.path;
+    print('imagem --> ${imagemSelecionada!.path}');
   }
-
 }

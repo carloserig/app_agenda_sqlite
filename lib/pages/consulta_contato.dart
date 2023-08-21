@@ -5,16 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class ConsultaContato extends StatefulWidget {
-
-  const ConsultaContato({ super.key });
+  const ConsultaContato({super.key});
 
   @override
   State<ConsultaContato> createState() => _ConsultaContatoState();
 }
 
 class _ConsultaContatoState extends State<ConsultaContato> {
-
-   final contatoStore = ContatoStore();
+  final contatoStore = ContatoStore();
 
   @override
   Widget build(BuildContext context) {
@@ -25,92 +23,69 @@ class _ConsultaContatoState extends State<ConsultaContato> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Cadastro de Contatos'),
+              centerTitle: true,
             ),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Observer(builder: (_) {
-                return Container(
-                  child: ListView.builder(
-                    itemCount: contatoStore.contatosList.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        child: Card(
-                          elevation: 2,
-                          shadowColor: Colors.grey,
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            child: Column(
+                return ListView.builder(
+                  itemCount: contatoStore.contatosList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      child: Card(
+                        elevation: 2,
+                        shadowColor: Colors.grey,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 70.0,
+                                height: 70.0,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: FileImage(File(contatoStore
+                                          .contatosList[index].foto!)),
+                                      fit: BoxFit.cover),
+                                ),
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width:  40.0,
-                                      height: 40.0,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                            image: FileImage(File(contatoStore.contatosList[index].foto!)),
-                                            fit: BoxFit.cover
-                                        ),
-                                      ),
-                                    ),  
-                                  ],
+                                Text(
+                                  contatoStore.contatosList[index].nome,
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        contatoStore.contatosList[index].nome,
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  contatoStore.contatosList[index].celular,
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontStyle: FontStyle.italic),
                                 ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        contatoStore.contatosList[index].celular,
-                                        style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        contatoStore.contatosList[index].email,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  contatoStore.contatosList[index].email,
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
+                          ],
                         ),
-                        onLongPress: () async {
-                          await _AlertExcluir(context, index);
-                        },
-                        onTap: () async {
-                          //await Navigator.of(context).pushNamed('/editar',
-                          //    arguments: contatoStore.contatosList[index]);
-                          //await contatoStore.buscarTodosContatos();
-                        },
-                      );
-                    },
-                  ),
+                      ),
+                      onLongPress: () async {
+                        await _AlertExcluir(context, index);
+                      },
+                      onTap: () async {},
+                    );
+                  },
                 );
               }),
             ),
@@ -193,8 +168,8 @@ class _ConsultaContatoState extends State<ConsultaContato> {
                             ),
                           ),
                     onPressed: () async {
-                      await contatoStore.deletarContato(
-                          contatoStore.contatosList[index].id!);
+                      await contatoStore
+                          .deletarContato(contatoStore.contatosList[index].id!);
                       Navigator.pop(context);
                       await contatoStore.buscarTodosContatos();
                     },
